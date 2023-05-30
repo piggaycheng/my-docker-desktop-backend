@@ -1,10 +1,14 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow, session } = require('electron')
+const { app, BrowserWindow, session, ipcMain } = require('electron')
 const path = require('path')
+const message_handler = require('./message_handler')
+const { wslProcess } = require('./message_handler/utils')
+
+let mainWindow = null
 
 function createWindow() {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 1920,
     height: 1080,
     webPreferences: {
@@ -47,3 +51,21 @@ app.on('window-all-closed', function () {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+let message = null;
+
+ipcMain.on("message", (e, args) => {
+  message = args;
+  message_handler[args.type][args.method]();
+})
+
+wslProcess.stdout.on("data", (chunk) => {
+  console.log("out: " + chunk.toString());
+  mainWindow.webContents.send("reply-message", {
+    "origin-message": message,
+    "content": chunk.toString()
+  })
+})
+
+wslProcess.stderr.on("data", (chunk) => {
+  console.log("error: " + chunk.toString());
+})

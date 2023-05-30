@@ -5,13 +5,17 @@
  *
  * https://www.electronjs.org/docs/latest/tutorial/sandbox
  */
-window.addEventListener('DOMContentLoaded', () => {
-  const replaceText = (selector, text) => {
-    const element = document.getElementById(selector)
-    if (element) element.innerText = text
-  }
+const { ipcRenderer } = require('electron');
 
-  for (const type of ['chrome', 'node', 'electron']) {
-    replaceText(`${type}-version`, process.versions[type])
-  }
+window.addEventListener('DOMContentLoaded', () => {
+  window.addEventListener("message", (e) => {
+    if (e.data.type && e.data.method) {
+      ipcRenderer.send("message", e.data)
+    }
+  })
+})
+
+
+ipcRenderer.on("reply-message", (e, message) => {
+  window.postMessage(message)
 })
