@@ -62,7 +62,7 @@ wslProcess.stdout.on("data", (chunk) => {
   console.log("out: " + chunk.toString());
   mainWindow.webContents.send("reply-message", {
     "origin-message": message,
-    "content": chunk.toString()
+    "content": `[${chunk.toString().split("\n").filter(x => x).join(",")}]`
   })
 })
 
