@@ -55,7 +55,7 @@ let message = null;
 
 ipcMain.on("message", (e, args) => {
   message = args;
-  message_handler[args.type][args.method]();
+  message_handler[args.type][args.method](args, mainWindow.webContents, message);
 })
 
 wslProcess.stdout.on("data", (chunk) => {
