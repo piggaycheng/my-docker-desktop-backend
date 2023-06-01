@@ -13,8 +13,13 @@ const startContainer = (args) => {
     wslProcess.stdin.write(`docker container start ${args.containerId}` + "\n")
 }
 
+const stopContainer = (args) => {
+    wslProcess.stdin.write(`docker container stop ${args.containerId}` + "\n")
+}
+
 module.exports = {
     getContainers,
     removeContainer,
-    startContainer
+    startContainer,
+    stopContainer
 }
