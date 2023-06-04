@@ -2,7 +2,6 @@
 const { app, BrowserWindow, session, ipcMain } = require('electron')
 const path = require('path')
 const message_handler = require('./message_handler')
-const { wslProcess } = require('./message_handler/utils')
 
 let mainWindow = null
 
@@ -58,14 +57,14 @@ ipcMain.on("message", (e, args) => {
   message_handler[args.type][args.method](args, mainWindow.webContents, message);
 })
 
-wslProcess.stdout.on("data", (chunk) => {
+const { subProcess } = require('./helpers/process')
+subProcess.stdout.on("data", (chunk) => {
   console.log("out: " + chunk.toString());
   mainWindow.webContents.send("reply-message", {
     "origin-message": message,
     "content": `[${chunk.toString().split("\n").filter(x => x).join(",")}]`
   })
 })
-
-wslProcess.stderr.on("data", (chunk) => {
+subProcess.stderr.on("data", (chunk) => {
   console.log("error: " + chunk.toString());
 })

@@ -1,8 +1,8 @@
-const { wslProcess } = require("./utils")
+const { subProcess } = require("../helpers/process")
 const { spawnSync } = require("child_process")
 
 const getImages = () => {
-    wslProcess.stdin.write("docker image ls --format='{{json .}}'\n")
+    subProcess.stdin.write("docker image ls --format='{{json .}}'\n")
 }
 
 const runImage = (args, webContents, originMessage) => {
