@@ -17,9 +17,14 @@ const stopContainer = (args) => {
     subProcess.stdin.write(`docker container stop ${args.containerId}` + "\n")
 }
 
+const getContainerLogs = (args) => { 
+    subProcess.stdin.write(`docker logs ${args.containerId}` + "\n")
+}
+
 module.exports = {
     getContainers,
     removeContainer,
     startContainer,
-    stopContainer
+    stopContainer,
+    getContainerLogs
 }
