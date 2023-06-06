@@ -60,11 +60,21 @@ ipcMain.on("message", (e, args) => {
 const { subProcess } = require('./helpers/process')
 subProcess.stdout.on("data", (chunk) => {
   console.log("out: " + chunk.toString());
+  let content = `[${chunk.toString().split("\n").filter(x => x).join(",")}]`
+  if (message && message.type === "container" && message.method === "getContainerLogs") {
+    content = chunk.toString()
+  }
   mainWindow.webContents.send("reply-message", {
     "origin-message": message,
-    "content": `[${chunk.toString().split("\n").filter(x => x).join(",")}]`
+    "content": content,
+    "stdType": "out"
   })
 })
 subProcess.stderr.on("data", (chunk) => {
   console.log("error: " + chunk.toString());
+  mainWindow.webContents.send("reply-message", {
+    "origin-message": message,
+    "content": chunk.toString(),
+    "stdType": "error"
+  })
 })
