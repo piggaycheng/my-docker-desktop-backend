@@ -2,6 +2,8 @@
 const { app, BrowserWindow, session, ipcMain } = require('electron')
 const path = require('path')
 const message_handler = require('./message_handler')
+const { getSubProcess, subProcessStore } = require('./helpers/process')
+const { global } = require("./helpers/global")
 
 let mainWindow = null
 
@@ -26,6 +28,8 @@ function createWindow() {
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools()
+
+  subProcessStore["main"] = getSubProcess(mainWindow.webContents)
 }
 
 // This method will be called when Electron has finished
@@ -50,31 +54,7 @@ app.on('window-all-closed', function () {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
-let message = null;
-
 ipcMain.on("message", (e, args) => {
-  message = args;
-  message_handler[args.type][args.method](args, mainWindow.webContents, message);
-})
-
-const { subProcess } = require('./helpers/process')
-subProcess.stdout.on("data", (chunk) => {
-  console.log("out: " + chunk.toString());
-  let content = `[${chunk.toString().split("\n").filter(x => x).join(",")}]`
-  if (message && message.type === "container" && message.method === "getContainerLogs") {
-    content = chunk.toString()
-  }
-  mainWindow.webContents.send("reply-message", {
-    "origin-message": message,
-    "content": content,
-    "stdType": "out"
-  })
-})
-subProcess.stderr.on("data", (chunk) => {
-  console.log("error: " + chunk.toString());
-  mainWindow.webContents.send("reply-message", {
-    "origin-message": message,
-    "content": chunk.toString(),
-    "stdType": "error"
-  })
+  global.message = args;
+  message_handler[args.type][args.method](args, mainWindow.webContents);
 })

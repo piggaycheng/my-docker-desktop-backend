@@ -1,28 +1,29 @@
-const { subProcess } = require("../helpers/process")
-const { spawnSync } = require("child_process")
+const { getSubProcess, subProcessStore } = require("../helpers/process")
 
 const getContainers = () => {
-    subProcess.stdin.write("docker container ls -a --format='{{json .}}'\n")
+    subProcessStore["main"].stdin.write("docker container ls -a --format='{{json .}}'\n")
 }
 
 const removeContainer = (args) => {
-    subProcess.stdin.write(`docker container rm ${args.containerId}` + "\n")
+    subProcessStore["main"].stdin.write(`docker container rm ${args.containerId}` + "\n")
 }
 
 const startContainer = (args) => {
-    subProcess.stdin.write(`docker container start ${args.containerId}` + "\n")
+    subProcessStore["main"].stdin.write(`docker container start ${args.containerId}` + "\n")
 }
 
 const stopContainer = (args) => {
-    subProcess.stdin.write(`docker container stop ${args.containerId}` + "\n")
+    subProcessStore["main"].stdin.write(`docker container stop ${args.containerId}` + "\n")
 }
 
-const getContainerLogs = (args) => {
-    subProcess.stdin.write(`docker logs --follow ${args.containerId}` + "\n")
+const getContainerLogs = (args, webContents) => {
+    subProcessStore["logs"] = getSubProcess(webContents)
+    subProcessStore["logs"].stdin.write(`docker logs --follow ${args.containerId}` + "\n")
 }
 
-const killSubProcess = () => {
-    subProcess.kill()
+const killSubProcess = (args) => {
+    subProcessStore[args.processKey].kill()
+    delete subProcessStore[args.processKey]
 }
 
 module.exports = {

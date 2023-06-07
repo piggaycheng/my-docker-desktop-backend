@@ -1,14 +1,14 @@
-const { subProcess } = require("../helpers/process")
+const { subProcessStore } = require("../helpers/process")
 const { spawnSync } = require("child_process")
 
 const getImages = () => {
-    subProcess.stdin.write("docker image ls --format='{{json .}}'\n")
+    subProcessStore["main"].stdin.write("docker image ls --format='{{json .}}'\n")
 }
 
-const runImage = (args, webContents, originMessage) => {
+const runImage = (args, webContents) => {
     spawnSync("wsl", ["-u", "root", "docker", "run", args.imageId])
     webContents.send("reply-message", {
-        "origin-message": originMessage,
+        "origin-message": args,
         "content": null
     })
 }
