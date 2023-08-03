@@ -2,7 +2,7 @@
 const { app, BrowserWindow, session, ipcMain } = require('electron')
 const path = require('path')
 const message_handler = require('./message_handler')
-const { getSubProcess, subProcessStore } = require('./helpers/process')
+const { getSubProcess, subProcessStore, getPtyProcess } = require('./helpers/process')
 const { global } = require("./helpers/global")
 
 let mainWindow = null
@@ -30,6 +30,7 @@ function createWindow() {
   mainWindow.webContents.openDevTools()
 
   subProcessStore["main"] = getSubProcess(mainWindow.webContents)
+  subProcessStore["pty"] = getPtyProcess(mainWindow.webContents)
 }
 
 // This method will be called when Electron has finished
@@ -57,4 +58,13 @@ app.on('window-all-closed', function () {
 ipcMain.on("message", (e, args) => {
   global.message = args;
   message_handler[args.type][args.method](args, mainWindow.webContents);
+})
+
+ipcMain.on('toMain', (e, args) => {
+  global.message = args;
+  message_handler[args.type][args.method](args, mainWindow.webContents);
+})
+
+ipcMain.on("inputPty", (e, args) => {
+  message_handler.container.inputPty(args)
 })
