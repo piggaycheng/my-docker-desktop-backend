@@ -27,11 +27,11 @@ const killSubProcess = (args) => {
 }
 
 const execContainer = (args) => {
-    subProcessStore["pty"].write(`docker exec -it ${args.containerId} sh` + "\n")
+    subProcessStore["execPty"].write(`docker exec -it ${args.containerId} sh` + "\n")
 }
 
 const inputPty = (args) => {
-    subProcessStore["pty"].write(args)
+    subProcessStore["execPty"].write(args.data)
 }
 
 module.exports = {

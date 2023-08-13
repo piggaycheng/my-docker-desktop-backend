@@ -62,11 +62,7 @@ ipcMain.on("message", (e, args) => {
   message_handler[args.type][args.method](args, mainWindow.webContents);
 })
 
-ipcMain.on('toMain', (e, args) => {
+ipcMain.on("mainPty", (e, args) => {
   global.message = args;
   message_handler[args.type][args.method](args, mainWindow.webContents);
-})
-
-ipcMain.on("inputPty", (e, args) => {
-  message_handler.container.inputPty(args)
 })
