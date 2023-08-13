@@ -42,7 +42,7 @@ const getSubProcess = (webContents) => {
 
 const subProcessStore = {}
 
-const getPtyProcess = (webContents) => {
+const getPtyProcess = (webContents, channel) => {
     const shell = process.platform === 'win32' ? 'powershell.exe' : 'bash'
     const ptyProcess = pty.spawn(shell, [], {
         name: 'xterm-color',
@@ -53,7 +53,7 @@ const getPtyProcess = (webContents) => {
     })
 
     ptyProcess.onData((data) => {
-        webContents.send("fromMain", data)
+        webContents.send(channel, data)
     })
 
     return ptyProcess

@@ -30,7 +30,9 @@ function createWindow() {
   mainWindow.webContents.openDevTools()
 
   subProcessStore["main"] = getSubProcess(mainWindow.webContents)
-  subProcessStore["pty"] = getPtyProcess(mainWindow.webContents)
+  subProcessStore["mainPty"] = getPtyProcess(mainWindow.webContents, "replyMainPty")
+  subProcessStore["logPty"] = getPtyProcess(mainWindow.webContents, "replyLogPty")
+  subProcessStore["execPty"] = getPtyProcess(mainWindow.webContents, "replyExecPty")
 }
 
 // This method will be called when Electron has finished
