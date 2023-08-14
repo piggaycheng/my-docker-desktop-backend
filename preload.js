@@ -26,13 +26,13 @@ contextBridge.exposeInMainWorld("process", {
   send: (channel, data) => {
     ipcRenderer.send(channel, data)
   },
-  receive: (channel, callback) => {
+  listen: (channel, callback) => {
     tempCallback = (event, args) => {
       callback(args)
     }
     ipcRenderer.on(channel, tempCallback)
   },
-  receiveOff: (channel) => {
+  listenOff: (channel) => {
     ipcRenderer.off(channel, tempCallback)
   }
 })
