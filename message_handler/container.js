@@ -16,9 +16,8 @@ const stopContainer = (args) => {
     subProcessStore["main"].stdin.write(`docker container stop ${args.containerId}` + "\n")
 }
 
-const getContainerLogs = (args, webContents) => {
-    subProcessStore["logs"] = getSubProcess(webContents)
-    subProcessStore["logs"].stdin.write(`docker logs --follow ${args.containerId}` + "\n")
+const getContainerLogs = (args) => {
+    subProcessStore["logsPty"].write(`docker logs --follow ${args.containerId}` + "\n")
 }
 
 const killSubProcess = (args) => {
