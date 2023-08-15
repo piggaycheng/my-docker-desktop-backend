@@ -20,19 +20,19 @@ ipcRenderer.on("reply-message", (e, message) => {
   window.postMessage(message)
 })
 
-let tempCallback = null
+let callbackStore = {}
 
 contextBridge.exposeInMainWorld("process", {
   send: (channel, data) => {
     ipcRenderer.send(channel, data)
   },
   listen: (channel, callback) => {
-    tempCallback = (event, args) => {
+    callbackStore[channel] = (event, args) => {
       callback(args)
     }
-    ipcRenderer.on(channel, tempCallback)
+    ipcRenderer.on(channel, callbackStore[channel])
   },
   listenOff: (channel) => {
-    ipcRenderer.off(channel, tempCallback)
+    ipcRenderer.off(channel, callbackStore[channel])
   }
 })
