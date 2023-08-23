@@ -33,6 +33,14 @@ const inputPty = (args) => {
     subProcessStore["execPty"].write(args.data)
 }
 
+const exitExec = () => {
+    subProcessStore["execPty"].write("exit" + "\n")
+}
+
+const exitLogs = () => {
+    subProcessStore["logsPty"].write("\x03" + "\n")
+}
+
 module.exports = {
     getContainers,
     removeContainer,
@@ -41,5 +49,7 @@ module.exports = {
     getContainerLogs,
     killSubProcess,
     execContainer,
-    inputPty
+    inputPty,
+    exitExec,
+    exitLogs
 }
