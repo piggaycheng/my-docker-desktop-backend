@@ -2,7 +2,7 @@ const { subProcessStore } = require("../helpers/process")
 const { spawnSync } = require("child_process")
 
 const getImages = () => {
-    subProcessStore["main"].stdin.write("docker image ls --format='{{json .}}'\n")
+    subProcessStore["mainPty"].write("docker image ls --format='{{json .}}'\n")
 }
 
 const runImage = (args, webContents) => {
