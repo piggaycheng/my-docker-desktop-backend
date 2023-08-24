@@ -18,7 +18,7 @@
   "license": "CC0-1.0",
   "devDependencies": {
     "@electron/rebuild": "^3.2.13",
-    "electron": "^24.3.1"
+    "electron": "^26.1.0"
   },
   "dependencies": {
     "node-pty": "^1.0.0"
