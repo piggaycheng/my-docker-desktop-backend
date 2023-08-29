@@ -53,7 +53,14 @@ const getPtyProcess = (webContents, channel) => {
     })
 
     ptyProcess.onData((data) => {
-        webContents.send(channel, data)
+        let finalData = data;
+        if (channel === "replyMainPty") {
+            finalData = {
+                data: data,
+                originMessage: global.message
+            }
+        }
+        webContents.send(channel, finalData)
     })
 
     return ptyProcess
