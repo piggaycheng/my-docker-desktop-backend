@@ -6,11 +6,7 @@ const getImages = () => {
 }
 
 const runImage = (args, webContents) => {
-    spawnSync("wsl", ["-u", "root", "docker", "run", args.imageId])
-    webContents.send("reply-message", {
-        "origin-message": args,
-        "content": null
-    })
+    subProcessStore["mainPty"].write(`docker run ${args.imageId}` + "\n")
 }
 
 module.exports = {
