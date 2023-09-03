@@ -1,7 +1,7 @@
 const { getSubProcess, subProcessStore } = require("../helpers/process")
 
 const getContainers = () => {
-    subProcessStore["main"].stdin.write("docker container ls -a --format='{{json .}}'\n")
+    subProcessStore["mainPty"].write("docker container ls -a --format='{{json .}}'\n")
 }
 
 const removeContainer = (args) => {
